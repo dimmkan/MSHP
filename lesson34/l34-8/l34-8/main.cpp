@@ -11,8 +11,9 @@ int main()
     out.open("out.txt", ios::out);
     char ch[10001] = {};
     while (in.getline(ch, 10001, '\n')) {
-        out << ch << endl;
-        out.seekp(-strlen(ch) - 1, ios::end);
+        out << ch;
+        out.seekp(strlen(ch)-1, ios::cur);
+        out << endl;
     }
     in.close();
     out.close();
