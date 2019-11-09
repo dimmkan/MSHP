@@ -1,8 +1,14 @@
-#include <cstdio>
+#include <iostream>
+using namespace std;
+int max(int a, int b){
+    int max;
+    (a > b) ? max = a : max = b;
+    return max;
+}
 int main()
 {
-    int a, b;
-    scanf("%d\n%d", &a, &b);
-    printf("%06d\n+\n%06d\n=\n%06d\n", a, b, a+b);
+    int x, y;
+    cin >> x >> y;
+    cout << max(x, 2*y) * max(2*x-y, y);
     return 0;
 }

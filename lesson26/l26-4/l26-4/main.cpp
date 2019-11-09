@@ -1,16 +1,21 @@
-#include <cstdio>
+#include <iostream>
+using namespace std;
+void digit_count(int k, int *c){
+    do{
+        k /= 10;
+        (*c)++;
+    }while(k);
+}
 int main()
 {
-    int a, b, c, d, e, f, x, y;
-    scanf("%d\n%d\n%d\n%d", &a, &b, &c, &d);
-    a *= d;
-    c *= b;
-    x = b * d;
-    y = a + c;
-    e = y / x;
-    f = y % x;
-    printf("           %10d\n", f);
-    printf("%10d ----------\n", e);
-    printf("           %10d", x);
+    int arr[5] = {};
+    for(int i = 0; i < 5; i++){
+        cin >> arr[i];
+    }
+    for(int i = 0; i < 5; i++){
+        int c = 0;
+        digit_count(arr[i], &c);
+        cout << c << endl;
+    }
     return 0;
 }
