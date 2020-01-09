@@ -94,25 +94,26 @@ int& CandyBox::at(int index){
 CandyBox Arcady_process(CandyBox b){
     CandyBox c = b;
     int *data = new int[c.size()];
-    int count = 0, i;
-    for(i = 0; i < c.size(); i++){
+    int count = 0;
+    bool flag = false;
+    for(int i = 0; i < c.size(); i++){
         if(c.at(i)%2 == 0){
-            data[count++] = c.at(i);
-            c.at(i) = 0;
+            if(flag){
+                c.at(i) = 0;
+                flag = false;
+            }else{
+                data[count++] = c.at(i);
+                c.at(i) = 0;
+                flag = true;
+            }
         }
     }
-    for(i = 1; i < count-2; i+=2){
-        data[i] = data[i+1];
-    }
-    count = i-1;
-    for(i = 0; i < count; i++){
-        int j = 0;
-        while(j < c.size()){
+    for(int i = 0; i < count; i++){
+        for(int j = 0; j < c.size(); j++){
             if(c.at(j) == 0){
                 c.at(j) = data[i];
                 break;
             }
-            j++;
         }
     }
     return c;
