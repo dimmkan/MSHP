@@ -1,0 +1,6 @@
+Pushistik Krasavchikov
+morning: fish
+evening: whiskas
+Snejok Belikov
+morning: whiskas
+evening: fish

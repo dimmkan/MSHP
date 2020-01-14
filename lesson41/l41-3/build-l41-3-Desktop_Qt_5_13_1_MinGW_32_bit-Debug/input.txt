@@ -1,0 +1,7 @@
+6
+Prygunok 2 - soldier Anna Mikhajlovna Mavrik 45 3
+Snejok 4 + general Ljudmila Vladimirovna Bystrova 70 5
+Barsik 5 - major Viktorija Gennadievna Popova 34 10
+Pushistik 1 + sergeant Anna Mikhajlovna Mavrik 45 3
+Murzik 3 + general Anastasija Andreevna Sharova 25 7
+Tsarapka 4 - major Anna Mikhajlovna Mavrik 45 3
