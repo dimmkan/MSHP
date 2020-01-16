@@ -1,0 +1,4 @@
+3
+Pushistik;Krasavchikov;fish;9
+Snejok;Belikov;whiskas;10
+Barsik;Ivanovich;fish;8

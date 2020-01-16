@@ -1,0 +1,12 @@
+name: Pushistik
+surname: Krasavchikov
+morning: fish
+cute grade: 9
+name: Snejok
+surname: Belikov
+morning: whiskas
+cute grade: 10
+name: Barsik
+surname: Ivanovich
+morning: fish
+cute grade: 8
