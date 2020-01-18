@@ -7,7 +7,7 @@ using namespace std;
 int countChar(char *str){
     int count = 0;
     for(size_t i = 0; i < strlen(str); i++){
-        count += (str[i] != '\n' || str[i] != '\r' ? 1 : 0);
+        count += (str[i] != '\n' || str[i] != '\r' || str[i] != '\0' ? 1 : 0);
     }
     return count;
 }
