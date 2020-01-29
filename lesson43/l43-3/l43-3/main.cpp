@@ -132,9 +132,7 @@ void Bank::manager_menu()
         if(s.find("ADD USER") != -1){
             char res[501] = {};
             strncpy(res, s.c_str(), s.length());
-            char name[101] = {};
-            char address[101] = {};
-            char balance[101] = {};
+            char name[101] = {}, address[101] = {}, balance[101] = {};
             strtok(res, " ");
             strtok(nullptr, " ");
             strcpy(name, strtok(nullptr, " "));
