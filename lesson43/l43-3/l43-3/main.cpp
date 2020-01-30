@@ -58,6 +58,7 @@ class Order {
     unsigned fine;        // Размер штрафа
 public:
     Order(const char *name = "User", int fine = 100);
+    Order(const Order &tmp);
     const char *get_name();     // Получение имени пользователя. Полученный указатель не должен предоставлять возможности изменять имя .
     unsigned get_fine();       // Получение размера штрафа
     void show();          // Вывод всех данных в формате: "name: fine"
@@ -66,6 +67,12 @@ public:
 Order::Order(const char *name, int fine)
 {
     strncpy(this->name, name, 101);
+    this->fine = fine;
+}
+
+Order::Order(const Order &tmp){
+    this->fine = tmp.fine;
+    strcpy(this->name, tmp.name);
 }
 
 const char *Order::get_name()
@@ -80,9 +87,8 @@ unsigned Order::get_fine()
 
 void Order::show()
 {
-    cout << name << ": " << fine;
+    cout << name << ": " << fine << endl;
 }
-
 
 class Bank {
     Account database[1000];       // Общее хранилище данных клиента
@@ -90,7 +96,7 @@ class Bank {
 public:
     Bank();                       // Создание пустого банка
     int add_user(char *name, char *address, int balance);    // Добавление нового пользователя. Если добавление возможно, то пользователь добавляется и в качестве результата добавляется его индекс в массив database. В ином случае (если места нет) - возвращается -1
-    Account get_user_data(char *name);  //  Получение данных пользователя
+    Account &get_user_data(const char *name);  //  Получение данных пользователя
     bool process_order(Order o);  // Обработка исполнительного листа
     void show_all();              // Вывод всех пользователей в формате, предоставляемом классом Account
     void manager_menu();          // Основная функция, вызываемая из основной программы
@@ -114,6 +120,7 @@ int Bank::add_user(char *name, char *address, int balance)
 
 bool Bank::process_order(Order o)
 {
+    return this->get_user_data(o.get_name()).update_balance(-o.get_fine());
 
 }
 
@@ -122,6 +129,16 @@ void Bank::show_all()
     for(int i = 0; i < count; i++){
         database[i].show();
     }
+}
+
+Account &Bank::get_user_data(const char* name){
+    static Account a;
+    for(int i = 0; i < count; i++){
+        if(!strcmp(name, database[i].get_name())){
+            return database[i];
+        }
+    }
+    return a;
 }
 
 void Bank::manager_menu()
@@ -138,10 +155,7 @@ void Bank::manager_menu()
             strcpy(name, strtok(nullptr, " "));
             strcpy(address, strtok(nullptr, " "));
             strcpy(balance, strtok(nullptr, " "));
-            string n, a, b;
-            n = name;
-            a = address;
-            b = balance;
+            string n = name, a = address, b = balance;
             trim(n, "\"");
             trim(a, "\"");
             trim(b, "\"");
@@ -151,15 +165,56 @@ void Bank::manager_menu()
             }
             strcpy(name, n.c_str());
             strcpy(address, a.c_str());
-            this->add_user(name, address, atoi(b.c_str()));
+            if(this->add_user(name, address, atoi(b.c_str())) != -1){
+                cout << "OK" << endl;
+            }else {
+                cout << "ERROR" << endl;
+            }
         }else if(s.find("SHOW ALL") != -1){
             this->show_all();
         }else if(s.find("SHOW ACCOUNT") != -1){
-
+            char res[501] = {};
+            strncpy(res, s.c_str(), s.length());
+            char name[101] = {};
+            strtok(res, " ");
+            strtok(nullptr, " ");
+            strcpy(name, strtok(nullptr, " "));
+            string n = name;
+            trim(n, "\"");
+            for(int i = 0; i < 101; i++){
+                name[i] = 0;
+            }
+            strcpy(name, n.c_str());
+            Account a = this->get_user_data(name);
+            if(!strcmp(a.get_name(), "User")){
+                cout << "ERR" << endl;
+            }else{
+                a.show();
+            }
         }else if(s.find("CREATE ORDER") != -1){
-
+            char res[501] = {};
+            strncpy(res, s.c_str(), s.length());
+            char name[101] = {}, balance[101] = {};
+            strtok(res, " ");
+            strtok(nullptr, " ");
+            strcpy(name, strtok(nullptr, " "));
+            strcpy(balance, strtok(nullptr, " "));
+            string n = name, b = balance;
+            trim(n, "\"");
+            trim(b, "\"");
+            for(int i = 0; i < 101; i++){
+                name[i] = 0;
+            }
+            strcpy(name, n.c_str());
+            Order o(name, atoi(b.c_str()));
+            if(this->process_order(o)){
+                cout << "OK" << endl;
+            }else{
+                cout << "ERROR" << endl;
+            }
         }else if(s.find("EXIT") != -1){
             cout << "GOOD BYE";
+            break;
         }
     }while(s.length());
 }
