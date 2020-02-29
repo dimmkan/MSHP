@@ -8,6 +8,8 @@ class AssocArray {
     int*   data;    // Дин. массив значений
     char** keys;    // Дин. массив. ключей
 
+    int find_key(const char *key);
+    void extend();
 public:
     AssocArray();   // Создаёт пустой массив
     ~AssocArray();
@@ -19,14 +21,44 @@ public:
     friend AssocArray operator + (const AssocArray&, int);
 };
 
+int AssocArray::find_key(const char *key)
+{
+    for(int i = 0; i < len; i++){
+        if(!strcmp(keys[i], key)){
+            return i;
+        }
+    }
+    return -1;
+}
+
+void AssocArray::extend()
+{
+    int *tmp_data = new int[len+1];
+    for(int i = 0; i < len; i++){
+        tmp_data[i] = data[i];
+    }
+    tmp_data[len] = 0;
+    delete [] data;
+    data = tmp_data;
+
+    char**tmp_keys = new char*[len+1];
+    for(int i = 0; i < len; i++){
+        tmp_keys[i] = keys[i];
+    }
+    tmp_keys[len] = new char[21];
+    for(int i = 0; i < 21; i++){
+        tmp_keys[len][i] = 0;
+    }
+    delete [] keys;
+    keys = tmp_keys;
+    ++len;
+}
+
 AssocArray::AssocArray()
 {
     len = 0;
     data = new int[len];
     keys = new char*[len];
-    for(int i = 0; i < 25; i++){
-
-    }
 }
 
 AssocArray::~AssocArray()
@@ -40,43 +72,41 @@ AssocArray::~AssocArray()
 
 int &AssocArray::operator[](const char *key)
 {
-    int index;
-    if(this->len == 0){
-        index = len;
-        data[index] = 0;
-        strcpy(keys[this->len++], key);
-    }else{
-        for(int i = 0; i < len; i++){
-            if(!strcmp(keys[this->len++],key)){
-                return data[i];
-            }
-        }
-        index = len;
-        strcpy(keys[this->len++], key);
+    int index = find_key(key);
+    if(index == -1){
+        extend();
+        index = len-1;
+        strncpy(keys[index], key, strlen(key));
     }
     return data[index];
 }
 
-int main()
-{
+void actions(AssocArray &m){
     int k;
     cin >> k;
-    AssocArray a;
     for(int i = 0; i < k; i++){
-        char cmd[25], w[25];
-        int tmp;
+        char cmd[4] = {};
         cin >> cmd;
-        if(strcmp(cmd,"SET")){
-            cin >> w >> tmp;
-            a[w] = tmp;
-        }else if(strcmp(cmd,"INC")){
-            cin >> w >> tmp;
-            cout << a[w] << endl;
-        }else if(strcmp(cmd,"GET")){
-            cin >> w;
-            cout << a[w] << endl
-                    ;
+        char key[21] = {};
+        cin >> key;
+        int x;
+        if(!strcmp(cmd, "SET")){
+            cin >> x;
+            m[key] = x;
+        }
+        if(!strcmp(cmd, "GET")){
+            cout << m[key] << endl;
+        }
+        if(!strcmp(cmd, "INC")){
+            cin >> x;
+            m[key] += x;
         }
     }
+}
+
+int main()
+{   
+    AssocArray m;
+    actions(m);
     return 0;
 }
