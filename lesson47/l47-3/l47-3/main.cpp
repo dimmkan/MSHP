@@ -12,7 +12,7 @@ public:
     String(const char *str);
     ~String();
     int length();
-    String& operator=(String &src);
+    String& operator=(const String &src);
     bool operator==(const String &src);
     char& operator[](int);
     String operator+(const String);
@@ -53,20 +53,17 @@ int String::length()
 String String::operator+(const String s)
 {
     char* tmp = new char[len + s.len];
-    for(int i = 0; i < len; i++){
-        tmp[i] = str[i];
+    for(int i = 0; i < len + s.len; i++){
+        tmp[i] = 0;
     }
-    for(int i = 0; i < s.len; i++){
-        tmp[i+len] = s.str[i];
-    }
-    tmp[len + s.len] = 0;
-    delete [] str;
-    str = tmp;
-    len += s.len;
-    return *this;
+    if(str) strcat(tmp, str);
+    strcat(tmp, s.str);
+    String res(tmp);
+    delete [] tmp;
+    return res;
 }
 
-String &String::operator=(String &src)
+String &String::operator=(const String &src)
 {
     len = src.len;
     delete [] str;
@@ -93,7 +90,8 @@ istream &operator >>(istream &is, String &s)
 {
     int max_len = 100001;
     char tmp[max_len];
-    is.getline(tmp, max_len);
+    is.getline(tmp, max_len, '\r');
+    is.ignore(1, '\n');
     if (s.len != 0) {
         delete [] s.str;
     }
@@ -118,12 +116,10 @@ int main()
     for(int i = 0; i < 5; i++){
         String tmp;
         cin >> tmp;
-        s + tmp;
+        s = s + tmp;
     }
-    for(int i = 0; i < s.length(); i++){
-        if(i%2 == 1){
-            s[i] = '_';
-        }
+    for(int i = 0; i<s.length(); i++){
+        s[i] = (i%2 == 1 ? '_' : s[i]);
     }
     cout << s;
     return 0;
