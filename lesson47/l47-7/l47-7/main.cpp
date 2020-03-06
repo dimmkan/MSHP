@@ -210,7 +210,7 @@ int main()
     cin >> a;
     String res("");
     for(int i = 0; i < a.word_count(); i++){
-        if(a(i) > res){
+        if(a(i) >= res){
             res = a(i);
         }
     }
