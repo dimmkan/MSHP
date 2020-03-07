@@ -6,36 +6,28 @@ using namespace std;
 
 class Set{
     int cnt;
-    int *data;
+    int data[10000000];
 public:
-    Set(): cnt(0), data(nullptr){}
+    Set(): cnt(0){}
     void add(int);
-    char* present(int);
+    bool present(int);
     int count();
     bool in_array(int);
 };
 
 void Set::add(int k)
 {
-    if(!in_array(k)){
-        int *tmp_data = new int[cnt+1];
-        for(int i = 0; i < cnt; i++){
-            tmp_data[i] = data[i];
-        }
-        tmp_data[cnt] = k;
-        delete [] data;
-        data = tmp_data;
-        ++cnt;
-        sort(data, data+cnt);
+    if(!present(k)){
+        data[cnt++] = k;
     }
 }
 
-char *Set::present(int k)
+bool Set::present(int k)
 {
-    if(in_array(k)){
-            return "YES";
+    for(int i = 0; i < cnt; i++){
+        if(data[i] == k) return true;
     }
-    return "NO";
+    return false;
 }
 
 int Set::count()
@@ -43,31 +35,24 @@ int Set::count()
     return cnt;
 }
 
-bool Set::in_array(int k)
-{
-    return binary_search(data, data+cnt, k);
-}
-
 int main()
 {
-    int x;
+    int x, tmp;
     Set s;
     cin >> x;
     for(int i = 0; i < x; i++){
         char cmd[8] = {};
         cin >> cmd;
-        if(!strcmp(cmd, "ADD")){
-            int tmp;
-            cin >> tmp;
-            s.add(tmp);
-        }else if(!strcmp(cmd, "PRESENT")){
-            int tmp;
-            cin >> tmp;
-            cout << s.present(tmp) << endl;
-        }else if(!strcmp(cmd, "COUNT")){
+        if(!strcmp(cmd, "COUNT")){
             cout << s.count() << endl;
-        }else{
-            return -1;
+        }else {
+            if(!strcmp(cmd, "ADD")){
+                cin >> tmp;
+                s.add(tmp);
+            }else if(!strcmp(cmd, "PRESENT")){
+                cin >> tmp;
+                cout << (s.present(tmp) ? "YES" : "NO") << endl;
+            }
         }
     }
     return 0;
