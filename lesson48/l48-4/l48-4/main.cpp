@@ -93,6 +93,7 @@ public:
     int length();                // Метод для получения длины массива
     void reverse();              // Перевернуть массив задом-наперед
     Array &operator=(const Array);
+    bool operator<(const Array<T>&);
     T &operator[](int);
     friend ostream& operator << (ostream& out, const Array<T>& arr){
         for(int i = 0; i < arr.len; i++){
@@ -157,6 +158,18 @@ Array<T> &Array<T>::operator=(const Array<T> arr)
 }
 
 template<class T>
+bool Array<T>::operator<(const Array<T> &arr)
+{
+    return len < arr.len;
+}
+
+template<>
+bool Array<char>::operator<(const Array &arr)
+{
+    return strcmp(data, arr.data) < 0;
+}
+
+template<class T>
 T &Array<T>::operator[](int index)
 {
     return data[index];
@@ -183,37 +196,47 @@ T array_max(Array<T> &d)
 
 int main()
 {
-    int x;
-    //Int
-    cin >> x;
-    Array<int> Int(x,0);
-    for(int i = 0; i < x; i++){
-        int tmp;
-        cin >> tmp;
-        Int[i] = tmp;
+    char cmd[8] = {};
+    cin >> cmd;
+    if(!strcmp(cmd, "INT")){
+        int a, b;
+        cin >> a;
+        Array<int> Int1(a,0);
+        for(int i = 0; i < a; i++){
+            cin >> Int1[i];
+        }
+        cin >> b;
+        Array<int> Int2(b,0);
+        for(int i = 0; i < b; i++){
+            cin >> Int2[i];
+        }
+        cout << (Int1 < Int2 ? "YES" : "NO");
+    }else if(!strcmp(cmd, "FRACTION")){
+        int a, b;
+        cin >> a;
+        Array<Fraction> Frac1(a,Fraction());
+        for(int i = 0; i < a; i++){
+            cin >> Frac1[i];
+        }
+        cin >> b;
+        Array<Fraction> Frac2(b,Fraction());
+        for(int i = 0; i < b; i++){
+            cin >> Frac2[i];
+        }
+        cout << (Frac1 < Frac2 ? "YES" : "NO");
+    }else if(!strcmp(cmd, "CHAR")){
+        int a, b;
+        cin >> a;
+        Array<char> Char1(a,'\0');
+        for(int i = 0; i < a; i++){
+            cin >> Char1[i];
+        }
+        cin >> b;
+        Array<char> Char2(b,'\0');
+        for(int i = 0; i < b; i++){
+            cin >> Char2[i];
+        }
+        cout << (Char1 < Char2 ? "YES" : "NO");
     }
-    Int.reverse();
-    //Char
-    cin >> x;
-    Array<char> Char(x,'\0');
-    for(int i = 0; i < x; i++){
-        char tmp;
-        cin >> tmp;
-        Char[i] = tmp;
-    }
-    Char.reverse();
-    //Fraction
-    cin >> x;
-    Array<Fraction> Frac(x, Fraction());
-    for(int i = 0; i < x; i++){
-        Fraction tmp;
-        cin >> tmp;
-        Frac[i] = tmp;
-    }
-    Frac.reverse();
-
-    cout << array_max(Int) << endl;
-    cout << array_max(Char) << endl;
-    cout << array_max(Frac) << endl;
     return 0;
 }
