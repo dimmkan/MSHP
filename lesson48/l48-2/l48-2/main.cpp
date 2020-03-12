@@ -71,7 +71,11 @@ istream &operator >>(istream &in, Fraction &f)
 
 ostream &operator <<(ostream &out, const Fraction &f)
 {
-    out << f.x << "/" << f.y;
+    if(f.x == f.y){
+        out << 1 << "/" << 1;
+    }else{
+        out << f.x << "/" << f.y;
+    }
     return out;
 }
 
