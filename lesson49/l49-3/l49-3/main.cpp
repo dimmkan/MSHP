@@ -70,23 +70,21 @@ bool Bus::add_passenger(int destination)
 void Bus::release()
 {
     if(passenger_count){
-        int cnt = 0;
-        for(int i = 0; i < passenger_count; i++){
-            if(passengers[i] != pos){
-                cnt++;
-            }else{
-                passengers[i] = 0;
+        int new_count = 0, *tmp = new int[passenger_count];
+        for (int i = 0; i < passenger_count; ++i){
+            if (this->pos != passengers[i]){
+                tmp[new_count++] = passengers[i];
             }
+
         }
-        int* tmp = new int[cnt];
-        for(int i = 0, j = 0; i < passenger_count; i++){
-            if(passengers[i]){
-                tmp[j++] = passengers[i];
-            }
+        for (int i = 0; i < new_count; ++i){
+            passengers[i] = tmp[i];
         }
-        passenger_count = cnt;
-        delete [] passengers;
-        passengers = tmp;
+        for (int i = new_count; i < passenger_count; ++i){
+            passengers[i] = 0;
+        }
+        passenger_count = new_count;
+        delete [] tmp;
     }
 }
 
