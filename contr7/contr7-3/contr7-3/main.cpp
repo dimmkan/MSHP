@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <cstdlib>
 #include <cmath>
 #include <cstring>
@@ -6,6 +7,7 @@
 using namespace std;
 
 class Binary {
+protected:
     bool data[32];
 public:
     Binary();
@@ -87,20 +89,66 @@ Binary Binary::operator/(const Binary src)
     return Binary(res);
 }
 
-int main()
+class BinaryWithOutput: public Binary{
+public:
+    BinaryWithOutput():Binary(){}
+    BinaryWithOutput(long long);
+    bool& operator[](const int index);
+    friend ostream& operator << (ostream&, const BinaryWithOutput&);
+    friend istream& operator >> (istream&, BinaryWithOutput&);
+    BinaryWithOutput increment();
+};
+
+ostream &operator <<(ostream & out, const BinaryWithOutput &b)
+{
+    int i = 0;
+    while (b.data[i] == 0 && i < 31) {
+        i++;
+    }
+    for(int j = i; j < 32; j++){
+        out << b.data[j];
+    }
+    out << endl;
+}
+
+
+istream &operator >>(istream &in, BinaryWithOutput &b)
 {
     char n[33] = {'\0'};
-    char k[33] = {'\0'};
-    cin >> n >> k;
-    Binary N(n);
-    Binary K(k);
-    Binary b0 = N + K;
-    Binary b1 = N - K;
-    Binary b2 = N * K;
-    Binary b3 = N / K;
-    b0.show();
-    b1.show();
-    b2.show();
-    b3.show();
+    in >> n;
+    int j = 31;
+    for(int i = strlen(n)-1; i >= 0; i--){
+        b[j--] = (n[i] == '0' ? false : true);
+    }
+}
+
+BinaryWithOutput::BinaryWithOutput(long long value):Binary(){
+    for(int i = 31, j = 0; value > 0; i--, j++){
+        data[i] = (value % 2) * pow(10, j);
+        value /= 2;
+    }
+}
+
+bool &BinaryWithOutput::operator[](const int index)
+{
+    return data[index];
+}
+
+BinaryWithOutput BinaryWithOutput::increment()
+{
+    return BinaryWithOutput(this->to_int() + 1);
+}
+
+int main()
+{
+    ifstream in;
+    ofstream out;
+    in.open("in.txt", ios::in);
+    out.open("out.txt", ios::out);
+    BinaryWithOutput b;
+    in >> b;
+    out << b.increment();
+    in.close();
+    out.close();
     return 0;
 }
