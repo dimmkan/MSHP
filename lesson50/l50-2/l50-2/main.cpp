@@ -8,44 +8,58 @@ class Figure {
 public:
     virtual double area() = 0;
     virtual double perimeter() = 0;
+    virtual void draw() = 0;
     virtual ~Figure(){}
 };
 
 class Rectangle: public Figure{
-private:
+protected:
     int x;
     int y;
 public:
     Rectangle(int x, int y):x(x), y(y){}
     double area(){return x*y;}
     double perimeter(){return (x+y)*2;}
+    void draw();
     ~Rectangle(){}
 };
 
+void Rectangle::draw()
+{
+    for(int i = 0; i < y; i++){
+        for(int j = 0; j < x; j++){
+            cout << "#";
+        }
+        cout << endl;
+    }
+    cout << endl;
+}
+
 class Circle: public Figure{
-private:
+protected:
     int r;
 public:
     Circle(int r): r(r){}
     double area(){return (2*asin(1)) * r * r;}
     double perimeter(){return 2*(2*asin(1))*r;}
+    void draw();
     ~Circle(){}
 };
 
-double array_area(Figure** array, int n){
-    double res = 0.0;
-    for(int i = 0; i < n; i++){
-        res += array[i]->area();
+void Circle::draw()
+{
+    for(int i = 0; i < 2*r + 1; i++){
+        for(int j = 0; j < 2*r + 1; j++){
+            bool usl = ((j-r)*(j-r)) + ((i-r)*(i-r)) <= r*r;
+            if(usl){
+                cout << "#";
+            }else {
+                cout << ".";
+            }
+        }
+        cout << endl;
     }
-    return res;
-}
-
-double array_perimeter(Figure** array, int n){
-    double res = 0.0;
-    for(int i = 0; i < n; i++){
-        res += array[i]->perimeter();
-    }
-    return res;
+    cout << endl;
 }
 
 int main()
@@ -66,7 +80,8 @@ int main()
             figures[i] = (Figure*)new Circle(r);
         }
     }
-    cout.precision(4);
-    cout << fixed << array_area(figures, n) << " " << fixed << array_perimeter(figures, n);
+    for(int i = 0; i < n; i++){
+        figures[i]->draw();
+    }
     return 0;
 }
